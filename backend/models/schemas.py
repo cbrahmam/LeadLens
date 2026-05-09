@@ -35,3 +35,42 @@ class ScrapedData(BaseModel):
     raw_html: str = ""
     response_headers: dict = {}
     cached_at: Optional[str] = None
+
+
+class EnrichRequest(BaseModel):
+    url: str
+
+    @field_validator("url")
+    @classmethod
+    def validate_url(cls, v: str) -> str:
+        v = v.strip()
+        parsed = urlparse(v)
+        if parsed.scheme not in ("http", "https"):
+            raise ValueError("URL must start with http:// or https://")
+        if not parsed.netloc:
+            raise ValueError("Invalid URL: missing domain")
+        return v
+
+
+class FundingInfo(BaseModel):
+    total_raised: Optional[str] = None
+    last_round: Optional[str] = None
+    last_round_date: Optional[str] = None
+    investors: list[str] = []
+    source: str = ""
+
+
+class CompanyEnrichedData(BaseModel):
+    domain: str
+    company_name: str
+    industry: Optional[str] = None
+    estimated_size: Optional[str] = None
+    headquarters: Optional[str] = None
+    tech_stack: list[str] = []
+    social_links: dict = {}
+    funding: Optional[FundingInfo] = None
+    recent_news: list[str] = []
+    linkedin_data: Optional[dict] = None
+    emails_found: list[str] = []
+    raw_scraped: ScrapedData
+    cached_at: Optional[str] = None
