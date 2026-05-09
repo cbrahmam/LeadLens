@@ -5,6 +5,7 @@ import SearchBar from '../components/SearchBar'
 import BatchInput from '../components/BatchInput'
 import ResearchProgress from '../components/ResearchProgress'
 import RecentSearches from '../components/RecentSearches'
+import SampleCompanies from '../components/SampleCompanies'
 import { researchCompany, researchBatch } from '../api/client'
 
 export default function HomePage() {
@@ -107,6 +108,7 @@ export default function HomePage() {
       </section>
 
       <RecentSearches />
+      <SampleCompanies />
     </div>
   )
 }

@@ -1,0 +1,67 @@
+{
+  "domain": "linear.app",
+  "researched_at": "2025-05-01T12:00:00+00:00",
+  "brief": {
+    "company_name": "Linear",
+    "one_liner": "Modern issue tracking and project management tool built for high-performance software teams.",
+    "executive_summary": "Linear is a streamlined project management and issue tracking tool designed for software development teams who value speed and simplicity. Founded in 2019 by former Uber and Coinbase engineers, Linear has gained a cult following among startups and tech companies for its keyboard-first interface, real-time sync, and opinionated workflows. The company has raised $52M and is growing rapidly as an alternative to Jira for modern engineering teams.",
+    "business_model": "SaaS with per-seat pricing. Free tier for small teams, Standard at $8/user/month, and Plus at $14/user/month. Revenue grows with team size and feature adoption.",
+    "target_market": "Software engineering teams at startups and mid-market tech companies. Particularly popular with product-led companies that value developer experience and fast workflows.",
+    "company_stage": "Growth",
+    "estimated_arr": "$30M-50M",
+    "key_contacts": [
+      {"name": "Karri Saarinen", "title": "CEO & Co-founder", "relevance": "Product visionary and decision maker, very active on Twitter/X discussing product philosophy"},
+      {"name": "Tuomas Artman", "title": "CTO & Co-founder", "relevance": "Technical decision maker, key for infrastructure and integration partnerships"}
+    ],
+    "pain_points": [
+      {"pain": "Scaling beyond engineering teams", "evidence": "Product positioning is heavily engineering-focused, but growth requires expanding to design, marketing, and cross-functional teams", "confidence": "high"},
+      {"pain": "Enterprise feature gaps", "evidence": "Pricing page shows limited enterprise features compared to Jira — SAML SSO, audit logs, and advanced permissions are recent additions", "confidence": "medium"},
+      {"pain": "Integration ecosystem breadth", "evidence": "Integrations page shows a growing but still limited set compared to Jira's marketplace of thousands of apps", "confidence": "medium"}
+    ],
+    "outreach_angles": [
+      {"approach": "Cross-Functional Expansion", "message_hook": "As Linear grows beyond engineering into design and product teams, the collaboration patterns change significantly — we help tools like yours bridge that gap.", "reasoning": "Linear's biggest growth opportunity is expanding beyond engineering, which requires different features and positioning", "best_channel": "linkedin"},
+      {"approach": "Enterprise Readiness Accelerator", "message_hook": "Linear's product is beloved by developers — we help companies like yours add the enterprise compliance layer without compromising the developer experience.", "reasoning": "Enterprise features are a growth driver but can slow down product development if not done efficiently", "best_channel": "email"},
+      {"approach": "Integration Marketplace", "message_hook": "Linear's API is powerful but your integration ecosystem is still early — we've helped similar platforms build and scale integration marketplaces that drive stickiness.", "reasoning": "Integrations drive retention and make Linear harder to replace, which is critical in a competitive market", "best_channel": "email"}
+    ],
+    "competitors": [
+      {"competitor": "Jira (Atlassian)", "relationship": "Primary competitor — Linear positions itself as the modern, faster alternative to Jira's complexity"},
+      {"competitor": "Shortcut (formerly Clubhouse)", "relationship": "Similar positioning as a Jira alternative for startups, but Linear has stronger brand and community"},
+      {"competitor": "GitHub Issues / Projects", "relationship": "Free alternative built into GitHub, competing for smaller teams and open-source projects"}
+    ],
+    "tech_stack_analysis": "Linear uses React with a custom real-time sync engine that provides the snappy, offline-capable experience. Their focus on performance and keyboard shortcuts reflects a deeply technical team that prioritizes developer experience in their own product.",
+    "recent_activity": "Linear recently launched Linear Insights for team analytics, expanded their API capabilities, and introduced new project views including timeline and board views.",
+    "conversation_starters": [
+      "How is Linear thinking about expanding adoption beyond core engineering teams?",
+      "The real-time sync engine is impressive — what infrastructure challenges come with scaling that?",
+      "With Jira adding AI features, how is Linear differentiating in the AI-assisted project management space?",
+      "Your integration ecosystem is growing — what's the strategy for building a third-party developer community?"
+    ],
+    "research_confidence": "high",
+    "data_gaps": ["Exact user count not publicly disclosed", "Revenue figures are estimated"]
+  },
+  "enriched_data": {
+    "domain": "linear.app",
+    "company_name": "Linear",
+    "industry": "Developer Tools / Project Management",
+    "estimated_size": "100-200 employees",
+    "headquarters": "San Francisco, CA",
+    "tech_stack": ["React", "Next.js", "Vercel", "Cloudflare"],
+    "social_links": {"twitter": "https://twitter.com/linear", "github": "https://github.com/linear"},
+    "funding": {"total_raised": "$52M", "last_round": "Series B", "last_round_date": "2022", "investors": ["Accel", "01 Advisors"], "source": "Google Search"},
+    "recent_news": ["Linear launches Insights feature", "Linear raises Series B funding"],
+    "linkedin_data": null,
+    "emails_found": [],
+    "raw_scraped": {
+      "url": "https://linear.app",
+      "domain": "linear.app",
+      "title": "Linear – Plan and build products",
+      "meta_description": "Linear is a purpose-built tool for planning and building products. Streamline issues, projects, and product roadmaps.",
+      "body_text": "Linear is a purpose-built tool for modern product development.",
+      "subpages_scraped": [],
+      "scrape_warnings": [],
+      "emails_found": [],
+      "raw_html": "",
+      "response_headers": {}
+    }
+  }
+}

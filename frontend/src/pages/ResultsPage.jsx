@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, useLocation, useNavigate, Link } from 'react-router-dom'
-import { ArrowLeft, Loader2, Download } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import { getResearchByDomain } from '../api/client'
 
 import CompanyHeader from '../components/results/CompanyHeader'
@@ -12,6 +12,8 @@ import OutreachAngles from '../components/results/OutreachAngles'
 import CompetitorsSection from '../components/results/CompetitorsSection'
 import ConversationStarters from '../components/results/ConversationStarters'
 import DataQuality from '../components/results/DataQuality'
+import ExportMenu from '../components/ExportMenu'
+import { ResultsSkeleton } from '../components/SkeletonLoader'
 
 export default function ResultsPage() {
   const { domain } = useParams()
@@ -30,19 +32,16 @@ export default function ResultsPage() {
       .finally(() => setLoading(false))
   }, [domain, data])
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-8 h-8 animate-spin text-indigo-500" />
-      </div>
-    )
-  }
+  if (loading) return <ResultsSkeleton />
 
   if (error) {
     return (
       <div className="max-w-2xl mx-auto px-4 pt-16 text-center">
-        <p className="text-red-600 mb-4">{error}</p>
-        <Link to="/" className="text-indigo-600 hover:underline">Back to Search</Link>
+        <div className="bg-red-50 border border-red-200 rounded-xl p-6">
+          <p className="text-red-700 font-medium mb-2">Failed to load research</p>
+          <p className="text-red-600 text-sm mb-4">{error}</p>
+          <Link to="/" className="text-indigo-600 hover:underline text-sm">Back to Search</Link>
+        </div>
       </div>
     )
   }
@@ -69,29 +68,19 @@ export default function ResultsPage() {
           <ArrowLeft className="w-4 h-4" />
           Back to Search
         </button>
-        <button
-          disabled
-          className="flex items-center gap-2 px-4 py-2 text-sm font-medium border border-slate-200
-                     rounded-lg text-slate-400 cursor-not-allowed"
-          title="Coming in Block 6"
-        >
-          <Download className="w-4 h-4" />
-          Export
-        </button>
+        <ExportMenu brief={brief} enrichedData={enrichedData} />
       </div>
 
       <CompanyHeader brief={brief} enrichedData={enrichedData} />
 
       <div className="flex flex-col lg:flex-row gap-6">
-        {/* Main content */}
         <div className="flex-1 lg:w-[70%] space-y-6">
           <ExecutiveSummary brief={brief} />
           <PainPoints painPoints={brief.pain_points} />
-          <OutreachAngles angles={brief.outreach_angles} />
+          <OutreachAngles angles={brief.outreach_angles} brief={brief} />
           <ConversationStarters starters={brief.conversation_starters} />
         </div>
 
-        {/* Sidebar */}
         <div className="lg:w-[30%] space-y-6">
           <div className="lg:sticky lg:top-4 space-y-6 lg:max-h-[calc(100vh-2rem)] lg:overflow-y-auto">
             <CompanyIntel brief={brief} enrichedData={enrichedData} />

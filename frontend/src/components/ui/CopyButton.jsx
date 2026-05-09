@@ -1,16 +1,19 @@
 import { useState } from 'react'
 import { Copy, Check } from 'lucide-react'
+import { useToast } from '../../utils/toastContext'
 
 export default function CopyButton({ text, label = 'Copy' }) {
   const [copied, setCopied] = useState(false)
+  const { showToast } = useToast()
 
   async function handleCopy() {
     try {
       await navigator.clipboard.writeText(text)
       setCopied(true)
+      showToast('Copied to clipboard')
       setTimeout(() => setCopied(false), 2000)
     } catch {
-      // Fallback silently
+      showToast('Failed to copy', 'error')
     }
   }
 

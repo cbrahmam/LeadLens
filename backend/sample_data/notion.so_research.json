@@ -1,0 +1,67 @@
+{
+  "domain": "notion.so",
+  "researched_at": "2025-05-01T12:00:00+00:00",
+  "brief": {
+    "company_name": "Notion",
+    "one_liner": "All-in-one workspace that combines notes, docs, wikis, and project management into a single tool.",
+    "executive_summary": "Notion is a productivity and collaboration platform that has become the go-to workspace for teams and individuals. Founded in 2013, the company has grown rapidly to over 30 million users, with a strong foothold in both startups and enterprises. Their product combines documents, databases, kanban boards, and wikis into a flexible, block-based editing system. Notion has raised significant venture capital and is positioned as a key player in the productivity software space.",
+    "business_model": "Freemium SaaS with tiered pricing. Free tier for individuals, paid plans for teams ($8/user/month) and enterprises ($15/user/month). Revenue driven by team adoption and seat expansion.",
+    "target_market": "Knowledge workers, product teams, startups, and enterprises looking to consolidate their tool stack. Strong adoption in tech companies, agencies, and education.",
+    "company_stage": "Growth",
+    "estimated_arr": "$250M-400M",
+    "key_contacts": [
+      {"name": "Ivan Zhao", "title": "CEO & Co-founder", "relevance": "Final decision maker on strategic partnerships and enterprise deals"},
+      {"name": "Akshay Kothari", "title": "COO", "relevance": "Oversees operations and growth initiatives, key contact for B2B partnerships"}
+    ],
+    "pain_points": [
+      {"pain": "Enterprise security and compliance gaps", "evidence": "Careers page shows heavy hiring for security engineers and SOC 2 compliance roles, suggesting they're still building out enterprise-grade security", "confidence": "high"},
+      {"pain": "Performance at scale with large workspaces", "evidence": "User forums and blog posts frequently mention performance issues with large databases and complex pages", "confidence": "high"},
+      {"pain": "Limited offline functionality", "evidence": "Product documentation acknowledges offline mode is limited, which affects enterprise adoption in regulated industries", "confidence": "medium"}
+    ],
+    "outreach_angles": [
+      {"approach": "Enterprise Security Enhancement", "message_hook": "I noticed Notion is scaling its security team — we help growth-stage companies accelerate SOC 2 and ISO 27001 compliance without slowing down product velocity.", "reasoning": "Security hiring signals investment in compliance, and they may need external tools to move faster", "best_channel": "email"},
+      {"approach": "Performance Optimization Partner", "message_hook": "As Notion's workspace sizes grow, database performance becomes critical — we've helped similar platforms achieve 10x query performance improvements.", "reasoning": "Performance is a known pain point that directly impacts user retention and enterprise deals", "best_channel": "linkedin"},
+      {"approach": "Developer Ecosystem Play", "message_hook": "Notion's API ecosystem is expanding rapidly — we help platforms like yours build and monetize developer marketplaces.", "reasoning": "The API launch signals a platform strategy where ecosystem growth becomes a competitive moat", "best_channel": "email"}
+    ],
+    "competitors": [
+      {"competitor": "Confluence (Atlassian)", "relationship": "Direct competitor in team wikis and documentation, but Notion is more flexible and modern"},
+      {"competitor": "Coda", "relationship": "Similar block-based doc approach, competes for the same power-user segment"},
+      {"competitor": "Monday.com", "relationship": "Overlaps in project management, but Monday focuses more on workflows and automation"}
+    ],
+    "tech_stack_analysis": "Notion uses React on the frontend with a custom rendering engine for their block editor. Their infrastructure runs on AWS with CloudFront CDN. The use of Segment and Amplitude indicates sophisticated product analytics and growth experimentation.",
+    "recent_activity": "Notion has been expanding into AI features with Notion AI, launched calendar integration, and recently announced expanded API capabilities for third-party developers.",
+    "conversation_starters": [
+      "How is the Notion AI rollout impacting your infrastructure scaling needs?",
+      "With enterprise adoption growing, what's your approach to meeting compliance requirements across different regions?",
+      "The API ecosystem seems to be a big bet — how are you thinking about third-party developer experience?",
+      "Performance optimization must be top of mind as workspace sizes grow — what's the team's current approach?"
+    ],
+    "research_confidence": "high",
+    "data_gaps": ["Exact employee count unclear", "Specific revenue figures not public"]
+  },
+  "enriched_data": {
+    "domain": "notion.so",
+    "company_name": "Notion",
+    "industry": "Productivity Software",
+    "estimated_size": "1000-2000 employees",
+    "headquarters": "San Francisco, CA",
+    "tech_stack": ["React", "Next.js", "Google Analytics", "Segment", "Amplitude", "AWS CloudFront", "Cloudflare"],
+    "social_links": {"twitter": "https://twitter.com/NotionHQ", "linkedin": "https://linkedin.com/company/notionhq"},
+    "funding": {"total_raised": "$343M", "last_round": "Series C", "last_round_date": "2021", "investors": ["Sequoia Capital", "Index Ventures"], "source": "Google Search"},
+    "recent_news": ["Notion launches new AI features", "Notion expands enterprise offerings"],
+    "linkedin_data": null,
+    "emails_found": [],
+    "raw_scraped": {
+      "url": "https://notion.so",
+      "domain": "notion.so",
+      "title": "Notion – The all-in-one workspace",
+      "meta_description": "A new tool that blends your everyday work apps into one. It's the all-in-one workspace for you and your team.",
+      "body_text": "Notion is the connected workspace where better, faster work happens.",
+      "subpages_scraped": [],
+      "scrape_warnings": [],
+      "emails_found": [],
+      "raw_html": "",
+      "response_headers": {}
+    }
+  }
+}

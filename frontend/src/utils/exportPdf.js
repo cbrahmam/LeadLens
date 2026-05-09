@@ -1,0 +1,184 @@
+import { jsPDF } from 'jspdf'
+
+const MARGIN = 20
+const PAGE_WIDTH = 170
+const LINE_HEIGHT = 6
+
+export async function exportPdf(brief, enrichedData) {
+  const doc = new jsPDF()
+  let y = MARGIN
+
+  function checkPage(needed = 20) {
+    if (y + needed > 280) {
+      doc.addPage()
+      y = MARGIN
+    }
+  }
+
+  function addHeading(text, size = 16) {
+    checkPage(20)
+    doc.setFontSize(size)
+    doc.setFont('helvetica', 'bold')
+    doc.text(text, MARGIN, y)
+    y += size * 0.5 + 4
+  }
+
+  function addBody(text) {
+    doc.setFontSize(10)
+    doc.setFont('helvetica', 'normal')
+    const lines = doc.splitTextToSize(text || '', PAGE_WIDTH)
+    for (const line of lines) {
+      checkPage(LINE_HEIGHT)
+      doc.text(line, MARGIN, y)
+      y += LINE_HEIGHT
+    }
+    y += 4
+  }
+
+  function addLabel(label, value) {
+    checkPage(LINE_HEIGHT * 2)
+    doc.setFontSize(9)
+    doc.setFont('helvetica', 'bold')
+    doc.text(label + ':', MARGIN, y)
+    doc.setFont('helvetica', 'normal')
+    doc.text(value || 'N/A', MARGIN + doc.getTextWidth(label + ': '), y)
+    y += LINE_HEIGHT + 2
+  }
+
+  // Title page
+  doc.setFontSize(24)
+  doc.setFont('helvetica', 'bold')
+  doc.setTextColor(79, 70, 229)
+  doc.text('LeadLens Research Brief', MARGIN, y)
+  y += 14
+
+  doc.setTextColor(0, 0, 0)
+  doc.setFontSize(18)
+  doc.text(brief.company_name, MARGIN, y)
+  y += 10
+
+  doc.setFontSize(11)
+  doc.setFont('helvetica', 'normal')
+  doc.setTextColor(100, 100, 100)
+  doc.text(brief.one_liner, MARGIN, y)
+  y += 8
+
+  doc.setFontSize(9)
+  doc.text(`Confidence: ${brief.research_confidence} | Stage: ${brief.company_stage}`, MARGIN, y)
+  y += 4
+  doc.text(`Date: ${new Date().toLocaleDateString()}`, MARGIN, y)
+  doc.setTextColor(0, 0, 0)
+  y += 12
+
+  doc.setDrawColor(200)
+  doc.line(MARGIN, y, MARGIN + PAGE_WIDTH, y)
+  y += 8
+
+  // Executive Summary
+  addHeading('Executive Summary', 14)
+  addBody(brief.executive_summary)
+
+  addLabel('Business Model', brief.business_model)
+  addLabel('Target Market', brief.target_market)
+  if (brief.estimated_arr) addLabel('Estimated ARR', brief.estimated_arr)
+
+  // Pain Points
+  if (brief.pain_points?.length > 0) {
+    addHeading('Pain Points', 14)
+    for (const p of brief.pain_points) {
+      checkPage(LINE_HEIGHT * 4)
+      doc.setFontSize(10)
+      doc.setFont('helvetica', 'bold')
+      doc.text(`• ${p.pain} (${p.confidence})`, MARGIN, y)
+      y += LINE_HEIGHT
+      doc.setFont('helvetica', 'normal')
+      const evidenceLines = doc.splitTextToSize(`Evidence: ${p.evidence}`, PAGE_WIDTH - 5)
+      for (const line of evidenceLines) {
+        checkPage(LINE_HEIGHT)
+        doc.text(line, MARGIN + 5, y)
+        y += LINE_HEIGHT
+      }
+      y += 3
+    }
+  }
+
+  // Outreach Angles
+  if (brief.outreach_angles?.length > 0) {
+    addHeading('Outreach Angles', 14)
+    for (const a of brief.outreach_angles) {
+      checkPage(LINE_HEIGHT * 6)
+      doc.setFontSize(11)
+      doc.setFont('helvetica', 'bold')
+      doc.text(a.approach, MARGIN, y)
+      y += LINE_HEIGHT + 1
+
+      doc.setFontSize(10)
+      doc.setFont('helvetica', 'italic')
+      const hookLines = doc.splitTextToSize(`"${a.message_hook}"`, PAGE_WIDTH - 5)
+      for (const line of hookLines) {
+        checkPage(LINE_HEIGHT)
+        doc.text(line, MARGIN + 5, y)
+        y += LINE_HEIGHT
+      }
+
+      doc.setFont('helvetica', 'normal')
+      addLabel('Channel', a.best_channel)
+      const reasonLines = doc.splitTextToSize(a.reasoning, PAGE_WIDTH - 5)
+      for (const line of reasonLines) {
+        checkPage(LINE_HEIGHT)
+        doc.text(line, MARGIN + 5, y)
+        y += LINE_HEIGHT
+      }
+      y += 4
+    }
+  }
+
+  // Key Contacts
+  if (brief.key_contacts?.length > 0) {
+    addHeading('Key Contacts', 14)
+    for (const c of brief.key_contacts) {
+      checkPage(LINE_HEIGHT * 3)
+      doc.setFontSize(10)
+      doc.setFont('helvetica', 'bold')
+      doc.text(`${c.name} — ${c.title}`, MARGIN, y)
+      y += LINE_HEIGHT
+      doc.setFont('helvetica', 'normal')
+      doc.text(c.relevance, MARGIN + 5, y)
+      y += LINE_HEIGHT + 2
+    }
+  }
+
+  // Tech Stack
+  if (enrichedData?.tech_stack?.length > 0) {
+    addHeading('Tech Stack', 14)
+    addBody(enrichedData.tech_stack.join(', '))
+    if (brief.tech_stack_analysis) addBody(brief.tech_stack_analysis)
+  }
+
+  // Competitors
+  if (brief.competitors?.length > 0) {
+    addHeading('Competitors', 14)
+    for (const c of brief.competitors) {
+      checkPage(LINE_HEIGHT * 2)
+      doc.setFontSize(10)
+      doc.setFont('helvetica', 'bold')
+      doc.text(`${c.competitor}: `, MARGIN, y)
+      doc.setFont('helvetica', 'normal')
+      doc.text(c.relationship, MARGIN + doc.getTextWidth(`${c.competitor}: `), y)
+      y += LINE_HEIGHT + 2
+    }
+  }
+
+  // Footer
+  checkPage(20)
+  y += 6
+  doc.setDrawColor(200)
+  doc.line(MARGIN, y, MARGIN + PAGE_WIDTH, y)
+  y += 6
+  doc.setFontSize(8)
+  doc.setTextColor(150, 150, 150)
+  doc.text('Generated by LeadLens', MARGIN, y)
+
+  const filename = `${brief.company_name.replace(/[^a-zA-Z0-9]/g, '-')}-research-brief.pdf`
+  doc.save(filename)
+}

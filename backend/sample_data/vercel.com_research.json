@@ -1,0 +1,67 @@
+{
+  "domain": "vercel.com",
+  "researched_at": "2025-05-01T12:00:00+00:00",
+  "brief": {
+    "company_name": "Vercel",
+    "one_liner": "Frontend cloud platform that enables developers to build and deploy web applications with zero configuration.",
+    "executive_summary": "Vercel is the company behind Next.js and a leading frontend deployment platform. Founded in 2015 by Guillermo Rauch, Vercel provides a seamless deployment experience for frontend developers, with features like edge computing, serverless functions, and automatic CI/CD. The company has raised over $300M and serves major enterprises including Washington Post, Under Armour, and Nintendo. Vercel is positioned at the intersection of developer tools and cloud infrastructure.",
+    "business_model": "Freemium platform with usage-based pricing. Hobby tier is free, Pro at $20/user/month, and Enterprise with custom pricing. Revenue driven by bandwidth, serverless function invocations, and enterprise contracts.",
+    "target_market": "Frontend developers, full-stack teams, and enterprises building modern web applications. Particularly strong with React/Next.js developers and companies migrating from traditional hosting to edge-first architectures.",
+    "company_stage": "Growth",
+    "estimated_arr": "$100M-200M",
+    "key_contacts": [
+      {"name": "Guillermo Rauch", "title": "CEO & Founder", "relevance": "Highly visible founder, active on Twitter/X, sets technical and business direction"},
+      {"name": "Lee Robinson", "title": "VP of Product", "relevance": "Public face of Vercel's developer relations and product strategy"}
+    ],
+    "pain_points": [
+      {"pain": "Enterprise sales cycle complexity", "evidence": "Careers page shows significant hiring for enterprise sales and solutions engineering, suggesting they're building out this motion", "confidence": "high"},
+      {"pain": "Cost management at scale", "evidence": "Developer forums show concerns about unexpected bills from serverless function usage and bandwidth overages", "confidence": "high"},
+      {"pain": "Backend capabilities perception", "evidence": "Vercel is often seen as frontend-only, but their serverless functions and edge computing push into backend territory — positioning challenge", "confidence": "medium"}
+    ],
+    "outreach_angles": [
+      {"approach": "Enterprise Sales Enablement", "message_hook": "As Vercel moves upmarket, the enterprise sales motion is fundamentally different from PLG — we help developer-tools companies build enterprise sales playbooks that preserve the developer-first culture.", "reasoning": "Vercel is actively building enterprise sales capacity, which is a major strategic shift from their PLG roots", "best_channel": "linkedin"},
+      {"approach": "Cost Optimization Tooling", "message_hook": "Usage-based pricing creates billing surprises — we help platforms like Vercel give customers better cost visibility and control, reducing churn from bill shock.", "reasoning": "Cost predictability is a direct driver of enterprise adoption and retention", "best_channel": "email"},
+      {"approach": "Full-Stack Positioning", "message_hook": "Vercel's edge functions and serverless capabilities are powerful but underappreciated — we help platforms like yours reposition from 'frontend hosting' to 'application platform'.", "reasoning": "Expanding the TAM requires changing how the market perceives Vercel beyond just frontend deployment", "best_channel": "email"}
+    ],
+    "competitors": [
+      {"competitor": "Netlify", "relationship": "Direct competitor in frontend hosting and JAMstack deployment, but Vercel has stronger Next.js integration"},
+      {"competitor": "AWS Amplify", "relationship": "Amazon's frontend deployment service, backed by AWS ecosystem but less developer-friendly"},
+      {"competitor": "Cloudflare Pages", "relationship": "Competing on edge deployment and performance, with Cloudflare's massive network advantage"}
+    ],
+    "tech_stack_analysis": "Vercel naturally uses Next.js and their own platform for their marketing site. Detection of Google Analytics and Vercel infrastructure confirms they dogfood their own product. The tech stack is clean and modern, reflecting their developer-experience-first philosophy.",
+    "recent_activity": "Vercel has launched v0 (AI-powered UI generation), expanded their edge computing capabilities, and announced new enterprise features including SOC 2 compliance and dedicated infrastructure options.",
+    "conversation_starters": [
+      "How is v0 changing the way Vercel thinks about the developer workflow?",
+      "What's the biggest challenge in transitioning from PLG to enterprise sales while keeping the developer community happy?",
+      "Edge computing adoption is growing — how is Vercel differentiating from Cloudflare's edge platform?",
+      "Cost predictability seems to be a concern for larger customers — how is the team addressing that?"
+    ],
+    "research_confidence": "high",
+    "data_gaps": ["Exact revenue not public", "Enterprise customer count not disclosed"]
+  },
+  "enriched_data": {
+    "domain": "vercel.com",
+    "company_name": "Vercel",
+    "industry": "Developer Tools / Cloud Infrastructure",
+    "estimated_size": "500-800 employees",
+    "headquarters": "San Francisco, CA",
+    "tech_stack": ["React", "Next.js", "Vercel", "Google Analytics", "Cloudflare"],
+    "social_links": {"twitter": "https://twitter.com/vercel", "github": "https://github.com/vercel"},
+    "funding": {"total_raised": "$313M", "last_round": "Series D", "last_round_date": "2022", "investors": ["GV", "Bedrock Capital", "SV Angel"], "source": "Google Search"},
+    "recent_news": ["Vercel launches v0 AI tool", "Vercel announces Next.js 15"],
+    "linkedin_data": null,
+    "emails_found": [],
+    "raw_scraped": {
+      "url": "https://vercel.com",
+      "domain": "vercel.com",
+      "title": "Vercel: Build and deploy the best Web experiences",
+      "meta_description": "Vercel's frontend cloud gives developers frameworks, workflows, and infrastructure to build a faster, more personalized web.",
+      "body_text": "Vercel enables developers to build and deploy web applications.",
+      "subpages_scraped": [],
+      "scrape_warnings": [],
+      "emails_found": [],
+      "raw_html": "",
+      "response_headers": {}
+    }
+  }
+}
