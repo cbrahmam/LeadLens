@@ -1,7 +1,10 @@
-import { UserCircle, Globe } from 'lucide-react'
+import { useState } from 'react'
+import { UserCircle, Globe, MessageCircle } from 'lucide-react'
 import CopyButton from '../ui/CopyButton'
+import LinkedInModal from './LinkedInModal'
 
-export default function KeyContacts({ contacts, companyName }) {
+export default function KeyContacts({ contacts, companyName, brief }) {
+  const [linkedinModalIndex, setLinkedinModalIndex] = useState(null)
   if (!contacts || contacts.length === 0) {
     return (
       <div className="bg-white border border-slate-200 rounded-xl p-6">
@@ -37,10 +40,31 @@ export default function KeyContacts({ contacts, companyName }) {
                 label="LinkedIn"
               />
             </div>
-            <p className="text-xs text-slate-600 mt-2 ml-7">{contact.relevance}</p>
+            <div className="flex items-center gap-2 mt-2 ml-7">
+              <p className="text-xs text-slate-600 flex-1">{contact.relevance}</p>
+              {brief && (
+                <button
+                  onClick={() => setLinkedinModalIndex(i)}
+                  className="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium
+                             border border-blue-200 rounded-md text-blue-600
+                             hover:bg-blue-50 transition-colors cursor-pointer flex-shrink-0"
+                >
+                  <MessageCircle className="w-3 h-3" />
+                  Message
+                </button>
+              )}
+            </div>
           </div>
         ))}
       </div>
+
+      {linkedinModalIndex !== null && brief && (
+        <LinkedInModal
+          brief={brief}
+          contactIndex={linkedinModalIndex}
+          onClose={() => setLinkedinModalIndex(null)}
+        />
+      )}
     </div>
   )
 }

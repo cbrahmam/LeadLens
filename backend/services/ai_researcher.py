@@ -7,6 +7,8 @@ from anthropic import AsyncAnthropic
 from backend.models.schemas import (
     ColdEmailResponse,
     CompanyEnrichedData,
+    KeyContact,
+    LinkedInMessageResponse,
     OutreachAngle,
     ResearchBrief,
 )
@@ -93,6 +95,25 @@ Return your analysis as a JSON object with this exact structure:
 }}
 
 Return ONLY valid JSON. No markdown, no explanation, no code fences."""
+
+LINKEDIN_MESSAGE_PROMPT = """Based on this research brief and target contact, write LinkedIn outreach messages.
+
+**Research Brief**:
+{brief_summary}
+
+**Target Contact**:
+- Name: {contact_name}
+- Title: {contact_title}
+- Relevance: {contact_relevance}
+
+Write TWO messages:
+1. A LinkedIn connection request note (max 300 characters, personal, reference something specific)
+2. A follow-up message to send after they accept (3-4 sentences, reference their role and a specific pain point)
+
+Return JSON with this structure:
+{{"connection_note": "Short connection request note", "follow_up_message": "Follow-up message after connection"}}
+
+Return ONLY valid JSON. No markdown, no explanation."""
 
 COLD_EMAIL_PROMPT = """Based on this research brief and outreach angle, write a personalized cold email.
 
@@ -259,4 +280,40 @@ async def generate_cold_email(
         subject=parsed["subject"],
         body=parsed["body"],
         angle_used=angle.approach,
+    )
+
+
+async def generate_linkedin_message(
+    brief: ResearchBrief,
+    contact: KeyContact,
+) -> LinkedInMessageResponse:
+    client = _get_client()
+
+    brief_summary = (
+        f"Company: {brief.company_name}\n"
+        f"What they do: {brief.one_liner}\n"
+        f"Business model: {brief.business_model}\n"
+        f"Target market: {brief.target_market}\n"
+        f"Stage: {brief.company_stage}\n"
+        f"Pain points: {'; '.join(p.pain for p in brief.pain_points[:3])}"
+    )
+
+    prompt = LINKEDIN_MESSAGE_PROMPT.format(
+        brief_summary=brief_summary,
+        contact_name=contact.name,
+        contact_title=contact.title,
+        contact_relevance=contact.relevance,
+    )
+
+    response = await client.messages.create(
+        model=MODEL,
+        max_tokens=1024,
+        messages=[{"role": "user", "content": prompt}],
+    )
+
+    parsed = _parse_json_response(response.content[0].text)
+    return LinkedInMessageResponse(
+        connection_note=parsed["connection_note"],
+        follow_up_message=parsed["follow_up_message"],
+        contact_name=contact.name,
     )
