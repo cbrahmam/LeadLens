@@ -165,3 +165,49 @@ class ColdEmailResponse(BaseModel):
     subject: str
     body: str
     angle_used: str
+
+
+class LeadScoreBreakdown(BaseModel):
+    pain_points: int
+    data_richness: int
+    contacts: int
+    engagement_potential: int
+
+
+class LeadScoreResponse(BaseModel):
+    total_score: int
+    grade: str
+    breakdown: LeadScoreBreakdown
+    top_signals: list[str]
+
+
+class LinkedInMessageRequest(BaseModel):
+    research_brief: ResearchBrief
+    contact_index: int
+
+
+class LinkedInMessageResponse(BaseModel):
+    connection_note: str
+    follow_up_message: str
+    contact_name: str
+
+
+class FavoriteRequest(BaseModel):
+    domain: str
+    notes: Optional[str] = ""
+
+
+class FavoriteResponse(BaseModel):
+    domain: str
+    company_name: str
+    notes: str
+    saved_at: str
+
+
+class AnalyticsResponse(BaseModel):
+    total_researched: int
+    avg_confidence: str
+    top_industries: list[dict]
+    stage_distribution: list[dict]
+    recent_activity: list[dict]
+    avg_lead_score: Optional[float] = None

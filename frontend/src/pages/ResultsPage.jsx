@@ -12,6 +12,8 @@ import OutreachAngles from '../components/results/OutreachAngles'
 import CompetitorsSection from '../components/results/CompetitorsSection'
 import ConversationStarters from '../components/results/ConversationStarters'
 import DataQuality from '../components/results/DataQuality'
+import LeadScore from '../components/results/LeadScore'
+import FavoriteButton from '../components/results/FavoriteButton'
 import ExportMenu from '../components/ExportMenu'
 import { ResultsSkeleton } from '../components/SkeletonLoader'
 
@@ -68,7 +70,10 @@ export default function ResultsPage() {
           <ArrowLeft className="w-4 h-4" />
           Back to Search
         </button>
-        <ExportMenu brief={brief} enrichedData={enrichedData} />
+        <div className="flex items-center gap-2">
+          <FavoriteButton domain={domain} />
+          <ExportMenu brief={brief} enrichedData={enrichedData} />
+        </div>
       </div>
 
       <CompanyHeader brief={brief} enrichedData={enrichedData} />
@@ -83,10 +88,12 @@ export default function ResultsPage() {
 
         <div className="lg:w-[30%] space-y-6">
           <div className="lg:sticky lg:top-4 space-y-6 lg:max-h-[calc(100vh-2rem)] lg:overflow-y-auto">
+            <LeadScore domain={domain} />
             <CompanyIntel brief={brief} enrichedData={enrichedData} />
             <KeyContacts
               contacts={brief.key_contacts}
               companyName={brief.company_name}
+              brief={brief}
             />
             <CompetitorsSection competitors={brief.competitors} />
           </div>

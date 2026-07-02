@@ -48,3 +48,51 @@ export function generateColdEmail(researchBrief, angleIndex) {
     }),
   });
 }
+
+export function generateLinkedInMessage(researchBrief, contactIndex) {
+  return request('/research/linkedin', {
+    method: 'POST',
+    body: JSON.stringify({
+      research_brief: researchBrief,
+      contact_index: contactIndex,
+    }),
+  });
+}
+
+export function getLeadScore(domain) {
+  return request(`/research/score?domain=${encodeURIComponent(domain)}`, {
+    method: 'POST',
+  });
+}
+
+export function getAnalytics() {
+  return request('/research/analytics');
+}
+
+export function getFavorites() {
+  return request('/favorites');
+}
+
+export function addFavorite(domain, notes = '') {
+  return request('/favorites', {
+    method: 'POST',
+    body: JSON.stringify({ domain, notes }),
+  });
+}
+
+export function updateFavorite(domain, notes) {
+  return request(`/favorites/${encodeURIComponent(domain)}`, {
+    method: 'PUT',
+    body: JSON.stringify({ domain, notes }),
+  });
+}
+
+export function removeFavorite(domain) {
+  return request(`/favorites/${encodeURIComponent(domain)}`, {
+    method: 'DELETE',
+  });
+}
+
+export function compareCompanies(domains) {
+  return request(`/research/compare?domains=${encodeURIComponent(domains.join(','))}`);
+}
