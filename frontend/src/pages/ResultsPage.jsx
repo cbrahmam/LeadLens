@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useParams, useLocation, useNavigate, Link } from 'react-router-dom'
-import { ArrowLeft } from 'lucide-react'
-import { getResearchByDomain } from '../api/client'
+import { ArrowLeft, RefreshCw } from 'lucide-react'
+import { getResearchByDomain, rerunResearch } from '../api/client'
+import { useToast } from '../utils/toastContext'
 
 import CompanyHeader from '../components/results/CompanyHeader'
 import ExecutiveSummary from '../components/results/ExecutiveSummary'
@@ -14,6 +15,7 @@ import ConversationStarters from '../components/results/ConversationStarters'
 import DataQuality from '../components/results/DataQuality'
 import LeadScore from '../components/results/LeadScore'
 import FavoriteButton from '../components/results/FavoriteButton'
+import PipelineButton from '../components/results/PipelineButton'
 import ExportMenu from '../components/ExportMenu'
 import { ResultsSkeleton } from '../components/SkeletonLoader'
 
@@ -24,6 +26,8 @@ export default function ResultsPage() {
   const [data, setData] = useState(location.state?.data || null)
   const [loading, setLoading] = useState(!data)
   const [error, setError] = useState('')
+  const [rerunning, setRerunning] = useState(false)
+  const { showToast } = useToast()
 
   useEffect(() => {
     if (data) return
@@ -33,6 +37,19 @@ export default function ResultsPage() {
       .catch(err => setError(err.message))
       .finally(() => setLoading(false))
   }, [domain, data])
+
+  async function handleRerun() {
+    setRerunning(true)
+    try {
+      const result = await rerunResearch(`https://${domain}`)
+      setData(result)
+      showToast('Research refreshed with latest data')
+    } catch (err) {
+      showToast(err.message || 'Re-research failed', 'error')
+    } finally {
+      setRerunning(false)
+    }
+  }
 
   if (loading) return <ResultsSkeleton />
 
@@ -71,6 +88,18 @@ export default function ResultsPage() {
           Back to Search
         </button>
         <div className="flex items-center gap-2">
+          <button
+            onClick={handleRerun}
+            disabled={rerunning}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg
+                       bg-white border border-slate-200 text-slate-600 hover:bg-slate-50
+                       transition-colors cursor-pointer disabled:opacity-50"
+            title="Re-research with fresh data"
+          >
+            <RefreshCw className={`w-4 h-4 ${rerunning ? 'animate-spin' : ''}`} />
+            {rerunning ? 'Refreshing...' : 'Re-research'}
+          </button>
+          <PipelineButton domain={domain} companyName={brief.company_name} />
           <FavoriteButton domain={domain} />
           <ExportMenu brief={brief} enrichedData={enrichedData} />
         </div>
