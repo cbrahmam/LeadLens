@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { Target, Mail, Phone, Globe } from 'lucide-react'
+import { Target, Mail, Phone, Globe, ListOrdered } from 'lucide-react'
 import CopyButton from '../ui/CopyButton'
 import ColdEmailModal from './ColdEmailModal'
+import EmailSequenceModal from './EmailSequenceModal'
 
 const CHANNEL_ICONS = {
   email: Mail,
@@ -11,6 +12,7 @@ const CHANNEL_ICONS = {
 
 export default function OutreachAngles({ angles, brief }) {
   const [emailModalIndex, setEmailModalIndex] = useState(null)
+  const [sequenceModalIndex, setSequenceModalIndex] = useState(null)
 
   if (!angles || angles.length === 0) return null
 
@@ -54,7 +56,16 @@ export default function OutreachAngles({ angles, brief }) {
                                hover:bg-indigo-50 transition-colors cursor-pointer"
                   >
                     <Mail className="w-3.5 h-3.5" />
-                    Generate Cold Email
+                    Cold Email
+                  </button>
+                  <button
+                    onClick={() => setSequenceModalIndex(i)}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium
+                               border border-indigo-200 rounded-md text-indigo-600
+                               hover:bg-indigo-50 transition-colors cursor-pointer"
+                  >
+                    <ListOrdered className="w-3.5 h-3.5" />
+                    3-Email Sequence
                   </button>
                 </div>
               </div>
@@ -68,6 +79,14 @@ export default function OutreachAngles({ angles, brief }) {
           brief={brief}
           angleIndex={emailModalIndex}
           onClose={() => setEmailModalIndex(null)}
+        />
+      )}
+
+      {sequenceModalIndex !== null && brief && (
+        <EmailSequenceModal
+          brief={brief}
+          angleIndex={sequenceModalIndex}
+          onClose={() => setSequenceModalIndex(null)}
         />
       )}
     </>

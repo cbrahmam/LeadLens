@@ -7,10 +7,12 @@ from anthropic import AsyncAnthropic
 from backend.models.schemas import (
     ColdEmailResponse,
     CompanyEnrichedData,
+    EmailSequenceResponse,
     KeyContact,
     LinkedInMessageResponse,
     OutreachAngle,
     ResearchBrief,
+    SequenceEmail,
 )
 
 MODEL = "claude-sonnet-4-20250514"
@@ -95,6 +97,30 @@ Return your analysis as a JSON object with this exact structure:
 }}
 
 Return ONLY valid JSON. No markdown, no explanation, no code fences."""
+
+EMAIL_SEQUENCE_PROMPT = """Based on this research brief and outreach angle, write a 3-email outreach sequence.
+
+**Research Brief**:
+{brief_summary}
+
+**Selected Outreach Angle**:
+- Approach: {approach}
+- Message Hook: {message_hook}
+- Reasoning: {reasoning}
+
+Write exactly 3 emails in a sequence:
+1. **Initial outreach** (Day 1): Opens with the message hook, references specific company details, clear CTA. 3-4 sentences max.
+2. **Value-add follow-up** (Day 3-4): Provides a specific insight, case study reference, or data point relevant to their pain. Does NOT re-pitch. 2-3 sentences.
+3. **Breakup email** (Day 7): Polite, short, gives them an easy out while leaving the door open. 2 sentences max.
+
+Return JSON with this structure:
+{{"emails": [
+  {{"step": 1, "subject": "string", "body": "string", "send_day": 1, "purpose": "Initial outreach"}},
+  {{"step": 2, "subject": "string", "body": "string", "send_day": 3, "purpose": "Value-add follow-up"}},
+  {{"step": 3, "subject": "string", "body": "string", "send_day": 7, "purpose": "Breakup email"}}
+]}}
+
+Return ONLY valid JSON. No markdown, no explanation."""
 
 LINKEDIN_MESSAGE_PROMPT = """Based on this research brief and target contact, write LinkedIn outreach messages.
 
@@ -316,4 +342,41 @@ async def generate_linkedin_message(
         connection_note=parsed["connection_note"],
         follow_up_message=parsed["follow_up_message"],
         contact_name=contact.name,
+    )
+
+
+async def generate_email_sequence(
+    brief: ResearchBrief,
+    angle: OutreachAngle,
+) -> EmailSequenceResponse:
+    client = _get_client()
+
+    brief_summary = (
+        f"Company: {brief.company_name}\n"
+        f"What they do: {brief.one_liner}\n"
+        f"Business model: {brief.business_model}\n"
+        f"Target market: {brief.target_market}\n"
+        f"Stage: {brief.company_stage}\n"
+        f"Pain points: {'; '.join(p.pain for p in brief.pain_points[:3])}"
+    )
+
+    prompt = EMAIL_SEQUENCE_PROMPT.format(
+        brief_summary=brief_summary,
+        approach=angle.approach,
+        message_hook=angle.message_hook,
+        reasoning=angle.reasoning,
+    )
+
+    response = await client.messages.create(
+        model=MODEL,
+        max_tokens=2048,
+        messages=[{"role": "user", "content": prompt}],
+    )
+
+    parsed = _parse_json_response(response.content[0].text)
+    emails = [SequenceEmail(**e) for e in parsed["emails"]]
+    return EmailSequenceResponse(
+        emails=emails,
+        angle_used=angle.approach,
+        total_steps=len(emails),
     )
