@@ -211,3 +211,43 @@ class AnalyticsResponse(BaseModel):
     stage_distribution: list[dict]
     recent_activity: list[dict]
     avg_lead_score: Optional[float] = None
+
+
+class SequenceEmail(BaseModel):
+    step: int
+    subject: str
+    body: str
+    send_day: int
+    purpose: str
+
+
+class EmailSequenceRequest(BaseModel):
+    research_brief: ResearchBrief
+    angle_index: int
+
+
+class EmailSequenceResponse(BaseModel):
+    emails: list[SequenceEmail]
+    angle_used: str
+    total_steps: int
+
+
+class PipelineEntry(BaseModel):
+    domain: str
+    company_name: str
+    stage: str
+    added_at: str
+    updated_at: str
+    notes: str = ""
+    history: list[dict] = []
+
+
+class PipelineUpdateRequest(BaseModel):
+    stage: str
+    notes: Optional[str] = None
+
+
+class PipelineAddRequest(BaseModel):
+    domain: str
+    company_name: str
+    stage: str = "new"

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { BarChart3, Building2, Target, TrendingUp, ArrowRight, Loader2 } from 'lucide-react'
-import { getAnalytics } from '../api/client'
+import { BarChart3, Building2, Target, TrendingUp, ArrowRight, Loader2, Download } from 'lucide-react'
+import { getAnalytics, exportCsv } from '../api/client'
 
 export default function AnalyticsPage() {
   const [analytics, setAnalytics] = useState(null)
@@ -48,12 +48,20 @@ export default function AnalyticsPage() {
           </h1>
           <p className="text-sm text-slate-500 mt-1">Insights across all your company research</p>
         </div>
-        <Link
-          to="/"
-          className="text-sm text-indigo-600 hover:underline"
-        >
-          Back to Search
-        </Link>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={exportCsv}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg
+                       bg-white border border-slate-200 text-slate-600 hover:bg-slate-50
+                       transition-colors cursor-pointer"
+          >
+            <Download className="w-4 h-4" />
+            Export CSV
+          </button>
+          <Link to="/" className="text-sm text-indigo-600 hover:underline">
+            Back to Search
+          </Link>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">

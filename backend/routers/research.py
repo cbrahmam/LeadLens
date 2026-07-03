@@ -11,12 +11,17 @@ from backend.models.schemas import (
     ColdEmailRequest,
     ColdEmailResponse,
     CompanyEnrichedData,
+    EmailSequenceRequest,
+    EmailSequenceResponse,
     EnrichRequest,
     FavoriteRequest,
     FavoriteResponse,
     LeadScoreResponse,
     LinkedInMessageRequest,
     LinkedInMessageResponse,
+    PipelineAddRequest,
+    PipelineEntry,
+    PipelineUpdateRequest,
     ResearchBrief,
     ResearchRequest,
     ResearchResponse,
@@ -25,11 +30,19 @@ from backend.models.schemas import (
 )
 from backend.services.ai_researcher import (
     generate_cold_email,
+    generate_email_sequence,
     generate_linkedin_message,
     generate_research_brief,
 )
 from backend.services.enrichment import enrich_company
 from backend.services.lead_scoring import calculate_lead_score
+from backend.services.pipeline import (
+    add_to_pipeline,
+    get_all_pipeline_entries,
+    get_pipeline_stats,
+    remove_from_pipeline,
+    update_pipeline_stage,
+)
 from backend.services.scraper import (
     CACHE_DIR,
     extract_domain,
@@ -400,3 +413,127 @@ async def compare_companies(domains: str) -> list[dict]:
         })
 
     return results
+
+
+# --- Email Sequence ---
+
+@router.post("/research/email-sequence", response_model=EmailSequenceResponse)
+async def generate_email_sequence_endpoint(request: EmailSequenceRequest) -> EmailSequenceResponse:
+    brief = request.research_brief
+    if request.angle_index < 0 or request.angle_index >= len(brief.outreach_angles):
+        raise HTTPException(status_code=422, detail="Invalid angle index")
+
+    angle = brief.outreach_angles[request.angle_index]
+
+    try:
+        return await generate_email_sequence(brief, angle)
+    except ValueError as e:
+        if "not configured" in str(e):
+            raise HTTPException(status_code=503, detail=str(e))
+        raise HTTPException(status_code=502, detail=f"Sequence generation failed: {str(e)}")
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"Sequence generation failed: {str(e)}")
+
+
+# --- Pipeline ---
+
+@router.get("/pipeline")
+async def get_pipeline() -> list[PipelineEntry]:
+    entries = get_all_pipeline_entries()
+    return [PipelineEntry(**e) for e in entries]
+
+
+@router.post("/pipeline", response_model=PipelineEntry)
+async def add_pipeline_entry(request: PipelineAddRequest) -> PipelineEntry:
+    entry = add_to_pipeline(request.domain, request.company_name, request.stage)
+    return PipelineEntry(**entry)
+
+
+@router.put("/pipeline/{domain}", response_model=PipelineEntry)
+async def update_pipeline_entry(domain: str, request: PipelineUpdateRequest) -> PipelineEntry:
+    entry = update_pipeline_stage(domain, request.stage, request.notes)
+    if not entry:
+        raise HTTPException(status_code=404, detail="Pipeline entry not found or invalid stage")
+    return PipelineEntry(**entry)
+
+
+@router.delete("/pipeline/{domain}")
+async def remove_pipeline_entry(domain: str) -> dict:
+    removed = remove_from_pipeline(domain)
+    if not removed:
+        raise HTTPException(status_code=404, detail="Pipeline entry not found")
+    return {"status": "removed", "domain": domain}
+
+
+@router.get("/pipeline/stats")
+async def pipeline_stats_endpoint() -> dict:
+    return get_pipeline_stats()
+
+
+# --- Re-research (cache invalidation) ---
+
+@router.post("/research/rerun")
+async def rerun_research(request: ResearchRequest) -> ResearchResponse:
+    domain = extract_domain(request.url)
+
+    for suffix in ["", "_enriched", "_research"]:
+        cache_file = Path(CACHE_DIR) / f"{domain.replace('/', '_').replace(':', '_')}{suffix}.json"
+        if cache_file.exists():
+            cache_file.unlink()
+
+    return await _run_full_pipeline(request.url)
+
+
+# --- CSV Export ---
+
+@router.get("/research/export/csv")
+async def export_csv():
+    from starlette.responses import Response
+
+    cache_path = Path(CACHE_DIR)
+    if not cache_path.exists():
+        return Response(content="No data", media_type="text/plain")
+
+    headers = [
+        "domain", "company_name", "one_liner", "industry", "estimated_size",
+        "headquarters", "company_stage", "estimated_arr", "research_confidence",
+        "pain_points_count", "contacts_count", "tech_stack", "researched_at",
+    ]
+
+    rows = [",".join(headers)]
+
+    for file in cache_path.glob("*_research.json"):
+        try:
+            data = json.loads(file.read_text(encoding="utf-8"))
+            brief = data.get("brief", {})
+            enriched = data.get("enriched_data", {})
+
+            def esc(v):
+                s = str(v or "").replace('"', '""')
+                return f'"{s}"' if "," in s or '"' in s or "\n" in s else s
+
+            row = [
+                esc(data.get("domain", "")),
+                esc(brief.get("company_name", "")),
+                esc(brief.get("one_liner", "")),
+                esc(enriched.get("industry", "")),
+                esc(enriched.get("estimated_size", "")),
+                esc(enriched.get("headquarters", "")),
+                esc(brief.get("company_stage", "")),
+                esc(brief.get("estimated_arr", "")),
+                esc(brief.get("research_confidence", "")),
+                str(len(brief.get("pain_points", []))),
+                str(len(brief.get("key_contacts", []))),
+                esc("; ".join(enriched.get("tech_stack", []))),
+                esc(data.get("researched_at", "")),
+            ]
+            rows.append(",".join(row))
+        except (json.JSONDecodeError, KeyError):
+            continue
+
+    csv_content = "\n".join(rows)
+    return Response(
+        content=csv_content,
+        media_type="text/csv",
+        headers={"Content-Disposition": "attachment; filename=leadlens-export.csv"},
+    )

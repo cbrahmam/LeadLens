@@ -96,3 +96,52 @@ export function removeFavorite(domain) {
 export function compareCompanies(domains) {
   return request(`/research/compare?domains=${encodeURIComponent(domains.join(','))}`);
 }
+
+export function generateEmailSequence(researchBrief, angleIndex) {
+  return request('/research/email-sequence', {
+    method: 'POST',
+    body: JSON.stringify({
+      research_brief: researchBrief,
+      angle_index: angleIndex,
+    }),
+  });
+}
+
+export function getPipeline() {
+  return request('/pipeline');
+}
+
+export function addToPipeline(domain, companyName, stage = 'new') {
+  return request('/pipeline', {
+    method: 'POST',
+    body: JSON.stringify({ domain, company_name: companyName, stage }),
+  });
+}
+
+export function updatePipelineStage(domain, stage, notes = null) {
+  return request(`/pipeline/${encodeURIComponent(domain)}`, {
+    method: 'PUT',
+    body: JSON.stringify({ stage, notes }),
+  });
+}
+
+export function removeFromPipeline(domain) {
+  return request(`/pipeline/${encodeURIComponent(domain)}`, {
+    method: 'DELETE',
+  });
+}
+
+export function getPipelineStats() {
+  return request('/pipeline/stats');
+}
+
+export function rerunResearch(url) {
+  return request('/research/rerun', {
+    method: 'POST',
+    body: JSON.stringify({ url }),
+  });
+}
+
+export function exportCsv() {
+  window.open('/api/research/export/csv', '_blank');
+}
