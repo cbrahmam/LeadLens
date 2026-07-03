@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
   --color-primary-50: #eef2ff;
@@ -13,6 +15,12 @@ body {
   font-family: var(--font-sans);
   background-color: #f8fafc;
   color: #0f172a;
+}
+
+.dark body,
+body:where(.dark *) {
+  background-color: #020617;
+  color: #e2e8f0;
 }
 
 @keyframes fade-in {
